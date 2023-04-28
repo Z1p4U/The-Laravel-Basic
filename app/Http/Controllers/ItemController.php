@@ -2,68 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use GuzzleHttp\Promise\Create;
-use Illuminate\Http\Request;
 use App\Models\Item;
-
-use function PHPUnit\Framework\isNull;
+use Illuminate\Http\Request;
 
 class ItemController extends Controller
 {
-    public function create()
-    {
-        return view("inventory.create");
-    }
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-
-        // $items = new Item();
-        // $all  = $items->all();
-        // return $all;
-
         return view('inventory.index', [
             "items" => Item::all()
         ]);
     }
 
-    public function show($id)
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
     {
-        //SELECT * FROM item WHERE $id = id;
-        // $item = Item::findOrFail($id);
-        // if (isNull($item)) {
-        //     return abort(404);
-        // }
-
-
-        // return $item;
-        // return view('inventory.show', compact('item'));
-        return view('inventory.show', [
-            "item" => Item::findOrFail($id)
-        ]);
+        return view('inventory.create');
     }
 
-    public function edit($id)
-    {
-        return view("inventory.edit", [
-            "item" => Item::findOrFail($id)
-        ]);
-    }
-
-    public function update($id, Request $request)
-    {
-        $item = Item::findOrFail($id);
-        $item->name = $request->name;
-        $item->price = $request->price;
-        $item->stock = $request->stock;
-
-        $item->update();
-
-        return redirect()->route('item.index');
-    }
-
+    /**
+     * Store a newly created resource in storage.
+     */
     public function store(Request $request)
     {
-        // dd($request);
+        $request->validate([
+            'name' => 'required|min:3|max:50|unique:items,name',
+            'price' => 'required|numeric|gte:50', //gte is greater than equal
+            'stock' => 'required|numeric|gt:3', //gt is greater than
+        ]);
 
 
         $item = new Item();
@@ -73,30 +44,44 @@ class ItemController extends Controller
 
         $item->save();
 
+        return redirect()->route('item.index');
+    }
 
-        // $item = Item::create([
-        //     "name" => $request->name,
-        //     "price" => $request->price,
-        //     "stock" => $request->stock,
-        // ]);
+    /**
+     * Display the specified resource.
+     */
+    public function show(Item $item)
+    {
+        return view('inventory.show', compact('item'));
+    }
 
-        // $item = Item::create($request->all());
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Item $item)
+    {
+        return view('inventory.edit', compact('item'));
+    }
 
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Item $item)
+    {
+        $item->name = $request->name;
+        $item->price = $request->price;
+        $item->stock = $request->stock;
 
-
-        // $item = new Item::insert([
-        //     "name" => $request->name,
-        //     "price" => $request->price,
-        //     "stock" => $request->stock,
-        // ]);
+        $item->update();
 
         return redirect()->route('item.index');
     }
 
-
-    public function destroy($id)
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Item $item)
     {
-        $item = Item::findOrFail($id);
         $item->delete();
         return redirect()->back();
     }
