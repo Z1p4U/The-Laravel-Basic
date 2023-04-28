@@ -1,4 +1,4 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('title')
     Category Lists
@@ -23,10 +23,11 @@
                     <td>{{ $category->title }}</td>
                     <td>{{ Str::limit($category->description, 20, '...') }}</td>
                     <td>
-                        <a class=" btn btn-sm btn-outline-primary" href="{{route('category.show',$category->id)}}">Detail</a>
-                        <a class=" btn btn-sm btn-outline-info" href="{{route('category.edit',$category->id)}}">Edit</a>
+                        <a class=" btn btn-sm btn-outline-primary"
+                            href="{{ route('category.show', $category->id) }}">Detail</a>
+                        <a class=" btn btn-sm btn-outline-info" href="{{ route('category.edit', $category->id) }}">Edit</a>
 
-                        <form class=" d-inline-block" action="{{route('category.destroy',$category->id)}}" method="POST">
+                        <form class=" d-inline-block" action="{{ route('category.destroy', $category->id) }}" method="POST">
                             @csrf
                             @method('delete')
                             <button class=" btn btn-sm btn-outline-danger">Delete</button>
@@ -34,14 +35,13 @@
                     </td>
                 </tr>
             @empty
-            <tr>
-                <td colspan="5" class=" text-center">
-                    <p class=" text-center">There is no record.</p>
-                    <a href="{{route("category.create")}}" class=" btn btn-primary">Create</a>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="5" class=" text-center">
+                        <p class=" text-center">There is no record.</p>
+                        <a href="{{ route('category.create') }}" class=" btn btn-primary">Create</a>
+                    </td>
+                </tr>
             @endforelse
         </tbody>
     </table>
-
 @endsection

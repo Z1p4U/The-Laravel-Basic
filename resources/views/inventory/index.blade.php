@@ -1,4 +1,4 @@
-@extends("layouts.master")
+@extends('layouts.master')
 
 @section('title')
     Item Lists
@@ -6,6 +6,17 @@
 
 @section('content')
     <h4>Item Lists</h4>
+
+    @if (session('status'))
+        <div class=" alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
+    @if (session('delStatus'))
+        <div class=" alert alert-danger">
+            {{ session('delStatus') }}
+        </div>
+    @endif
 
     <table class=" table table-bordered table-hover text-center">
         <thead>
@@ -25,10 +36,10 @@
                     <td>{{ $item->price }}</td>
                     <td>{{ $item->stock }}</td>
                     <td>
-                        <a class=" btn btn-sm btn-outline-primary" href="{{route('item.show',$item->id)}}">Detail</a>
-                        <a class=" btn btn-sm btn-outline-info" href="{{route('item.edit',$item->id)}}">Edit</a>
+                        <a class=" btn btn-sm btn-outline-primary" href="{{ route('item.show', $item->id) }}">Detail</a>
+                        <a class=" btn btn-sm btn-outline-info" href="{{ route('item.edit', $item->id) }}">Edit</a>
 
-                        <form class=" d-inline-block" action="{{route('item.destroy',$item->id)}}" method="POST">
+                        <form class=" d-inline-block" action="{{ route('item.destroy', $item->id) }}" method="POST">
                             @csrf
                             @method('delete')
                             <button class=" btn btn-sm btn-outline-danger">Delete</button>
@@ -36,14 +47,15 @@
                     </td>
                 </tr>
             @empty
-            <tr>
-                <td colspan="5" class=" text-center">
-                    <p class=" text-center">There is no record.</p>
-                    <a href="{{route("item.create")}}" class=" btn btn-primary">Create</a>
-                </td>
-            </tr>
+                <tr>
+                    <td colspan="5" class=" text-center">
+                        <p class=" text-center">There is no record.</p>
+                        <a href="{{ route('item.create') }}" class=" btn btn-primary">Create</a>
+                    </td>
+                </tr>
             @endforelse
         </tbody>
     </table>
 
+    {{ $items->onEachSide(1)->links() }}
 @endsection

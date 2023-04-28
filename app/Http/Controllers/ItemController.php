@@ -14,7 +14,7 @@ class ItemController extends Controller
     public function index()
     {
         return view('inventory.index', [
-            "items" => Item::all()
+            "items" => Item::paginate(8)
         ]);
     }
 
@@ -38,7 +38,7 @@ class ItemController extends Controller
 
         $item->save();
 
-        return redirect()->route('item.index');
+        return redirect()->route('item.index')->with('status', "Item Created Successfully");
     }
 
     /**
@@ -70,7 +70,7 @@ class ItemController extends Controller
 
         $item->update();
 
-        return redirect()->route('item.index');
+        return redirect()->route('item.index')->with('status', "Item Updated Successfully");
     }
 
     /**
@@ -79,6 +79,6 @@ class ItemController extends Controller
     public function destroy(Item $item)
     {
         $item->delete();
-        return redirect()->back();
+        return redirect()->back()->with('delStatus', "Item Deleted Successfully");
     }
 }

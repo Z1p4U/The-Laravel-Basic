@@ -27,4 +27,12 @@ class StoreItemRequest extends FormRequest
             'stock' => 'required|numeric|gt:3', //gt is greater than
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'name.required' => "နာမည်လေးထည့်လေကွာ",
+            'name.min' => "နာမည်က ၃ လုံးလောက်တော့ထည့်ပါဟ"
+        ];
+    }
 }
